@@ -25,6 +25,33 @@ function generateGrid() {
     currentNumber = 1;
 }
 
+// function handleClick(event) {
+//     const clickedNumber = parseInt(event.target.textContent);
+//     if (clickedNumber === currentNumber) {
+//         event.target.style.opacity = 0;
+//         currentNumber++;
+//         if (currentNumber > 25) {
+//             endTime = new Date();
+//             clearInterval(timerInterval);
+//             timerDisplay.style.color = "red";
+//             const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+
+//             triggerConfetti();  // 在检测到游戏结束时立即触发散花效果
+
+//             if (totalTime <= parseFloat(difficultySelect.value)) {
+//                 alert(`完成游戏！用时：${totalTime}秒`);
+//                 updateBestRecords(playerNameInput.value, totalTime, difficultySelect.options[difficultySelect.selectedIndex].text);
+//             } else {
+//                 alert(`时间超过限制，成绩不计入纪录`);
+//             }
+//         }
+//     } else {
+//         clearInterval(timerInterval);
+//         alert("哦豁～慌撒子嘛！再来一盘！");
+//         timerDisplay.textContent = "00:00.00";
+//         timerDisplay.style.color = "black";
+//     }
+// }
 function handleClick(event) {
     const clickedNumber = parseInt(event.target.textContent);
     if (clickedNumber === currentNumber) {
@@ -34,13 +61,20 @@ function handleClick(event) {
             endTime = new Date();
             clearInterval(timerInterval);
             timerDisplay.style.color = "red";
+            disableAllCells();  // 禁用所有方格的点击事件
             const totalTime = ((endTime - startTime) / 1000).toFixed(2);
-            if (totalTime <= parseFloat(difficultySelect.value)) {
-                alert(`完成游戏！用时：${totalTime}秒`);
-                updateBestRecords(playerNameInput.value, totalTime, difficultySelect.options[difficultySelect.selectedIndex].text);
-            } else {
-                alert(`时间超过限制，成绩不计入纪录`);
-            }
+            
+            triggerConfetti();  // 立即触发散花效果
+
+            // 确保散花效果开始展示后，再显示游戏完成的弹窗
+            setTimeout(function() {
+                if (totalTime <= parseFloat(difficultySelect.value)) {
+                    alert(`完成游戏！用时：${totalTime}秒`);  // 显示弹窗
+                    updateBestRecords(playerNameInput.value, totalTime, difficultySelect.options[difficultySelect.selectedIndex].text);
+                } else {
+                    alert(`时间超过限制，成绩不计入纪录`);
+                }
+            }, 100); // 延迟100ms或者更多，根据需要调整
         }
     } else {
         clearInterval(timerInterval);
@@ -128,3 +162,25 @@ resetButton.addEventListener("click", () => {
     saveBestRecords();
     updateBestRecordsList();
 });
+
+function triggerConfetti() {
+    confetti({
+        particleCount: 150,
+        spread: 120,
+        startVelocity: 30,
+        decay: 0.95,
+        scalar: 1.2,
+        origin: { y: 0.7 },
+        colors: ['#ff7eb9', '#a685e2', '#fed8b1', '#88e1f2', '#ff9a00', '#fff740', '#23bd73'],  // 七彩颜色配置
+        shapes: ['circle', 'square'],
+        ticks: 300,
+        zIndex: 1000
+    });
+}
+
+function disableAllCells() {
+    const cells = document.querySelectorAll('.grid-cell');
+    cells.forEach(cell => {
+        cell.removeEventListener('click', handleClick);
+    });
+}
