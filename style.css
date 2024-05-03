@@ -1,0 +1,72 @@
+body {
+    font-family: sans-serif; /* 使用通用 sans-serif 字体系列 */
+    font-size: 16px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+#game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: repeat(5, 50px);
+    grid-template-rows: repeat(5, 50px);
+    gap: 5px;
+}
+
+.grid-cell {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1em; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#timer {
+    font-size: 2em; 
+    margin-bottom: 10px;
+}
+
+.input-area, .difficulty-selection {
+    margin-bottom: 10px;
+}
+
+/* 其他样式，例如按钮、输入框等 */
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    #grid {
+        grid-template-columns: repeat(5, 30px);
+        grid-template-rows: repeat(5, 30px);
+    }
+    .grid-cell {
+        font-size: 0.8em; /* 缩小字号 */
+    }
+}

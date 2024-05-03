@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+<head>
+    <title>舒尔特方格</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>舒尔特方格</h1>
+    <div id="game-area">
+        <div class="input-area">
+            <label for="playerName">玩家姓名:</label>
+            <input type="text" id="playerName">
+            <button id="confirmName">确认</button>
+        </div>
+        <div class="difficulty-selection">
+            <label for="difficulty">难度:</label>
+            <select id="difficulty">
+                <option value="20">简易 (20秒)</option>
+                <option value="15">中等 (15秒)</option>
+                <option value="10">困难 (10秒)</option>
+            </select>
+        </div>
+        <button id="startButton" disabled>开始</button>
+        <div id="timer">00:00.00</div>
+        <div id="grid"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
