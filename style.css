@@ -1,6 +1,6 @@
 body {
-    font-family: sans-serif; /* 使用通用 sans-serif 字体系列 */
-    font-size: 16px; 
+    font-family: 'Consolas', 'Courier New', monospace; /* 使用等宽字体 */
+    font-size: 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -19,19 +19,30 @@ body {
     grid-template-columns: repeat(5, 50px);
     grid-template-rows: repeat(5, 50px);
     gap: 5px;
+    width: fit-content;
 }
 
 .grid-cell {
     background-color: #4CAF50;
     color: white;
-    font-size: 1em; 
+    font-size: 1em;
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+}
+
+.grid-cell.fade-out {
+    animation: fadeOut 0.2s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 #timer {
-    font-size: 2em; 
+    font-size: 2em;
     margin-bottom: 10px;
 }
 
@@ -39,7 +50,14 @@ body {
     margin-bottom: 10px;
 }
 
-/* 其他样式，例如按钮、输入框等 */
+#records-area {
+    width: 100%; /* 定义宽度以使内部元素可以居中 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 使内部元素垂直居中 */
+    margin-top: 20px;
+}
+
 button {
     padding: 10px 20px;
     background-color: #4CAF50;
@@ -47,15 +65,10 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    text-align: center; /* 文字居中显示 */
 }
 
-input[type="text"] {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-select {
+input[type="text"], select {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -65,8 +78,7 @@ select {
     #grid {
         grid-template-columns: repeat(5, 30px);
         grid-template-rows: repeat(5, 30px);
-    }
-    .grid-cell {
-        font-size: 0.8em; /* 缩小字号 */
+        width: 100vw;
+        margin: 0 auto;
     }
 }

@@ -4,9 +4,10 @@ const startButton = document.getElementById("startButton");
 const confirmNameButton = document.getElementById("confirmName");
 const playerNameInput = document.getElementById("playerName");
 const difficultySelect = document.getElementById("difficulty");
-let timeRemaining, timerInterval, currentNumber;
+let startTime, endTime, timerInterval, currentNumber, bestRecords = [];
 
-// 生成随机数字表格
+document.addEventListener("DOMContentLoaded", loadBestRecords);
+
 function generateGrid() {
     grid.innerHTML = "";
     const numbers = Array.from({length: 25}, (_, i) => i + 1);
@@ -21,48 +22,41 @@ function generateGrid() {
         cell.addEventListener("click", handleClick);
         grid.appendChild(cell);
     });
+    currentNumber = 1;
 }
 
-// 点击数字处理
 function handleClick(event) {
     const clickedNumber = parseInt(event.target.textContent);
     if (clickedNumber === currentNumber) {
-        event.target.style.visibility = "hidden";
+        event.target.style.opacity = 0;
         currentNumber++;
-        if (currentNumber === 26) {
+        if (currentNumber > 25) {
+            endTime = new Date();
             clearInterval(timerInterval);
             timerDisplay.style.color = "red";
-            // 将成绩提交到数据库 (此处仅为示例)
-            console.log("游戏结束！", playerNameInput.value, "用时:", timerDisplay.textContent); 
+            const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+            alert(`完成游戏！用时：${totalTime}秒`);
+            updateBestRecords(playerNameInput.value, totalTime, difficultySelect.options[difficultySelect.selectedIndex].text);
         }
     }
 }
 
-// 更新计时器
 function updateTimer() {
-    timeRemaining -= 0.01;
-    const minutes = Math.floor(timeRemaining / 60);
-    const seconds = Math.floor(timeRemaining % 60);
-    const hundredths = Math.floor((timeRemaining % 1) * 100);
-    timerDisplay.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}.${hundredths.toString().padStart(2, "0")}`;
+    const timeElapsed = (new Date() - startTime) / 1000;
+    const timeRemaining = parseFloat(difficultySelect.value) - timeElapsed;
     if (timeRemaining <= 0) {
         clearInterval(timerInterval);
         alert("时间到！");
-    } 
+        timerDisplay.textContent = "00:00.00s";
+        timerDisplay.style.color = "red";
+    } else {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = Math.floor(timeRemaining % 60);
+        const hundredths = Math.floor((timeRemaining % 1) * 100);
+        timerDisplay.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}.${hundredths.toString().padStart(2, "0")}`;
+    }
 }
 
-// 开始游戏
-function startGame() {
-    currentNumber = 1;
-    generateGrid();
-    timeRemaining = parseInt(difficultySelect.value);
-    timerDisplay.textContent = "00:00.00";
-    timerDisplay.style.color = "black";
-    clearInterval(timerInterval);
-    timerInterval = setInterval(updateTimer, 10);
-}
-
-// 确认玩家姓名
 confirmNameButton.addEventListener("click", () => {
     if (playerNameInput.value) {
         alert(`欢迎，${playerNameInput.value}！`);
@@ -72,8 +66,48 @@ confirmNameButton.addEventListener("click", () => {
     }
 });
 
-// 开始按钮事件
-startButton.addEventListener("click", startGame);
+startButton.addEventListener("click", () => {
+    generateGrid();
+    startTime = new Date();
+    timerDisplay.textContent = "00:00.00s";
+    timerDisplay.style.color = "black";
+    clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimer, 10);
+});
 
-// 初始化
-startButton.disabled = true;
+function updateBestRecords(playerName, time, difficulty) {
+    const newRecord = { playerName, time, difficulty };
+    bestRecords.push(newRecord);
+    bestRecords.sort((a, b) => parseFloat(a.time) - parseFloat(b.time));
+    bestRecords = bestRecords.slice(0, 5);
+    updateBestRecordsList();
+}
+
+function loadBestRecords() {
+    const storedRecords = localStorage.getItem("bestRecords");
+    if (storedRecords) {
+        bestRecords = JSON.parse(storedRecords);
+        updateBestRecordsList();
+    }
+}
+
+function saveBestRecords() {
+    localStorage.setItem("bestRecords", JSON.stringify(bestRecords));
+}
+
+function updateBestRecordsList() {
+    const recordsList = document.getElementById("bestRecords");
+    recordsList.innerHTML = "";
+    bestRecords.forEach(record => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${record.playerName}: ${record.time}秒 (${record.difficulty})`;
+        recordsList.appendChild(listItem);
+    });
+}
+
+const resetButton = document.getElementById("resetButton");
+resetButton.addEventListener("click", () => {
+    bestRecords = [];
+    saveBestRecords();
+    updateBestRecordsList();
+});
