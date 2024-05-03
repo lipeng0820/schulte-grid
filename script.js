@@ -25,6 +25,21 @@ function generateGrid() {
     currentNumber = 1;
 }
 
+// function handleClick(event) {
+//     const clickedNumber = parseInt(event.target.textContent);
+//     if (clickedNumber === currentNumber) {
+//         event.target.style.opacity = 0;
+//         currentNumber++;
+//         if (currentNumber > 25) {
+//             endTime = new Date();
+//             clearInterval(timerInterval);
+//             timerDisplay.style.color = "red";
+//             const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+//             alert(`完成游戏！用时：${totalTime}秒`);
+//             updateBestRecords(playerNameInput.value, totalTime, difficultySelect.options[difficultySelect.selectedIndex].text);
+//         }
+//     }
+// }
 function handleClick(event) {
     const clickedNumber = parseInt(event.target.textContent);
     if (clickedNumber === currentNumber) {
@@ -35,20 +50,45 @@ function handleClick(event) {
             clearInterval(timerInterval);
             timerDisplay.style.color = "red";
             const totalTime = ((endTime - startTime) / 1000).toFixed(2);
-            alert(`完成游戏！用时：${totalTime}秒`);
-            updateBestRecords(playerNameInput.value, totalTime, difficultySelect.options[difficultySelect.selectedIndex].text);
+            if (totalTime <= parseFloat(difficultySelect.value)) {
+                alert(`完成游戏！用时：${totalTime}秒`);
+                updateBestRecords(playerNameInput.value, totalTime, difficultySelect.options[difficultySelect.selectedIndex].text);
+            } else {
+                alert(`时间超过限制，成绩不计入纪录`);
+            }
         }
+    } else {
+        clearInterval(timerInterval);
+        alert("哦豁～慌撒子嘛！再来一盘！");
+        timerDisplay.textContent = "00:00.00";
+        timerDisplay.style.color = "black";
     }
 }
 
+// function updateTimer() {
+//     const timeElapsed = (new Date() - startTime) / 1000;
+//     const timeRemaining = parseFloat(difficultySelect.value) - timeElapsed;
+//     if (timeRemaining <= 0) {
+//         clearInterval(timerInterval);
+//         alert("时间到！");
+//         timerDisplay.textContent = "00:00.00s";
+//         timerDisplay.style.color = "red";
+//     } else {
+//         const minutes = Math.floor(timeRemaining / 60);
+//         const seconds = Math.floor(timeRemaining % 60);
+//         const hundredths = Math.floor((timeRemaining % 1) * 100);
+//         timerDisplay.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}.${hundredths.toString().padStart(2, "0")}`;
+//     }
+// }
 function updateTimer() {
     const timeElapsed = (new Date() - startTime) / 1000;
     const timeRemaining = parseFloat(difficultySelect.value) - timeElapsed;
     if (timeRemaining <= 0) {
         clearInterval(timerInterval);
         alert("时间到！");
-        timerDisplay.textContent = "00:00.00s";
+        timerDisplay.textContent = "00:00.00";
         timerDisplay.style.color = "red";
+        alert("时间超过限制，成绩不计入纪录");
     } else {
         const minutes = Math.floor(timeRemaining / 60);
         const seconds = Math.floor(timeRemaining % 60);
