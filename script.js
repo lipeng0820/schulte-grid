@@ -25,21 +25,6 @@ function generateGrid() {
     currentNumber = 1;
 }
 
-// function handleClick(event) {
-//     const clickedNumber = parseInt(event.target.textContent);
-//     if (clickedNumber === currentNumber) {
-//         event.target.style.opacity = 0;
-//         currentNumber++;
-//         if (currentNumber > 25) {
-//             endTime = new Date();
-//             clearInterval(timerInterval);
-//             timerDisplay.style.color = "red";
-//             const totalTime = ((endTime - startTime) / 1000).toFixed(2);
-//             alert(`完成游戏！用时：${totalTime}秒`);
-//             updateBestRecords(playerNameInput.value, totalTime, difficultySelect.options[difficultySelect.selectedIndex].text);
-//         }
-//     }
-// }
 function handleClick(event) {
     const clickedNumber = parseInt(event.target.textContent);
     if (clickedNumber === currentNumber) {
@@ -65,21 +50,6 @@ function handleClick(event) {
     }
 }
 
-// function updateTimer() {
-//     const timeElapsed = (new Date() - startTime) / 1000;
-//     const timeRemaining = parseFloat(difficultySelect.value) - timeElapsed;
-//     if (timeRemaining <= 0) {
-//         clearInterval(timerInterval);
-//         alert("时间到！");
-//         timerDisplay.textContent = "00:00.00s";
-//         timerDisplay.style.color = "red";
-//     } else {
-//         const minutes = Math.floor(timeRemaining / 60);
-//         const seconds = Math.floor(timeRemaining % 60);
-//         const hundredths = Math.floor((timeRemaining % 1) * 100);
-//         timerDisplay.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}.${hundredths.toString().padStart(2, "0")}`;
-//     }
-// }
 function updateTimer() {
     const timeElapsed = (new Date() - startTime) / 1000;
     const timeRemaining = parseFloat(difficultySelect.value) - timeElapsed;
@@ -107,12 +77,19 @@ confirmNameButton.addEventListener("click", () => {
 });
 
 startButton.addEventListener("click", () => {
-    generateGrid();
+    generateGrid();  // 生成棋盘
     startTime = new Date();
     timerDisplay.textContent = "00:00.00s";
     timerDisplay.style.color = "black";
     clearInterval(timerInterval);
     timerInterval = setInterval(updateTimer, 10);
+
+    // 新增代码：滚动到棋盘区域
+    const gridArea = document.getElementById('grid');
+    gridArea.scrollIntoView({
+        behavior: 'smooth',  // 平滑滚动
+        block: 'center'      // 棋盘居中
+    });
 });
 
 function updateBestRecords(playerName, time, difficulty) {
