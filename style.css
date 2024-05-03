@@ -1,6 +1,6 @@
 body {
     font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 18px;
+    font-size: 16px; /* 根据需要调整基本字体大小 */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -22,9 +22,9 @@ body {
 
 #grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, 1fr); /* 1fr 表示“分数单位”，每个方格占用可用空间的一份 */
     grid-template-rows: repeat(5, 1fr);
-    gap: 5px;
+    gap: 5px; /* 方格之间的间隔 */
     width: 100%; /* 宽度设置为100%以填充父容器 */
 }
 
@@ -36,8 +36,8 @@ body {
     align-items: center;
     cursor: pointer;
     aspect-ratio: 1; /* 保持方格为正方形 */
-    padding: 10px; /* 增加内边距以使方格内容更加明显 */
-    font-size: calc(5vw); /* 字体大小根据视口宽度调整 */
+    padding: 8px; /* 减小内边距以缩小方格 */
+    font-size: 3vw; /* 字体大小根据视口宽度调整 */
 }
 
 .grid-cell.fade-out {
@@ -84,8 +84,16 @@ input[type="text"], select {
 
 @media (max-width: 768px) {
     #grid {
-        width: calc(100vw - 30px); /* 在移动端视口宽度减去30px */
-        grid-template-columns: repeat(5, 1fr);
-        grid-template-rows: repeat(5, 1fr);
+        grid-template-columns: repeat(5, 15vw); /* 调整为视口宽度的15%，以缩小方格大小 */
+        grid-template-rows: repeat(5, 15vw);
     }
 }
+
+p {
+    text-align: center; /* 使段落文本居中 */
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 16px; /* 调整字体大小 */
+    color: #333; /* 设定字体颜色 */
+}
+
