@@ -13,7 +13,26 @@ document.addEventListener("DOMContentLoaded", function() {
     renderPlaceholderGrid(); // 渲染占位棋盘
     loadBestRecords();
     startButton.disabled = false; // 页面加载完毕后，激活开始按钮
+    restoreDifficultySelection(); // 恢复用户之前的难度选择
+
+    document.querySelectorAll('input[name="difficulty"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            localStorage.setItem('selectedDifficulty', this.value);  // 保存用户选择的难度到 localStorage
+        });
+    });
 });
+
+function restoreDifficultySelection() {
+    const savedDifficulty = localStorage.getItem('selectedDifficulty');
+    if (savedDifficulty) {
+        const radios = document.querySelectorAll('input[name="difficulty"]');
+        radios.forEach(radio => {
+            if (radio.value === savedDifficulty) {
+                radio.checked = true;  // 设置为选中
+            }
+        });
+    }
+}
 
 function renderPlaceholderGrid() {
     grid.innerHTML = "";
