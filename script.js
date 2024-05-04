@@ -7,6 +7,7 @@ const confirmNameButton = document.getElementById("confirmName");
 const playerNameInput = { value: "Player" }; // 默认名称为Player
 const difficultySelect = document.getElementById("difficulty");
 let startTime, endTime, timerInterval, currentNumber, bestRecords = [];
+let gameActive = true;  // 新增一个标志，用来表示游戏是否进行中
 
 document.addEventListener("DOMContentLoaded", function() {
     renderPlaceholderGrid(); // 渲染占位棋盘
@@ -42,7 +43,10 @@ function generateGrid() {
 }
 
 function handleClick(event) {
+    if (!gameActive) return;  // 如果游戏不活跃，不处理点击事件
     const clickedNumber = parseInt(event.target.textContent);
+    if (event.target.style.opacity === "0") return;  // 如果方块已经是不可见的，直接返回，不处理事件
+
     if (clickedNumber === currentNumber) {
         event.target.style.opacity = 0;
         currentNumber++;
@@ -65,12 +69,7 @@ function handleClick(event) {
             }, 100);
         }
     } else {
-        clearInterval(timerInterval);
-        timerDisplay.textContent = "00:00.00";
-        timerDisplay.style.color = "black";
-        alert("哦豁～慌撒子嘛！再来一盘！");
-        gameOver(); // 游戏失败，更改按钮状态
-        renderPlaceholderGrid(); // 游戏失败后重新渲染占位棋盘
+        gameOver("哦豁～慌撒子嘛！再来一盘！"); // 游戏失败，更改按钮状态，并提供错误点击的反馈
     }
 }
 
@@ -102,7 +101,8 @@ function updateTimer() {
 // });
 
 startButton.addEventListener("click", () => {
-    resetButtonState();  // 新增代码：重置按钮状态
+    gameActive = true;  // 每次开始游戏时重置游戏为活跃状态
+    resetButtonState();  // 重置按钮状态
     generateGrid(); // 生成棋盘
     startTime = new Date();
     timerDisplay.textContent = "00:00.00";
@@ -178,11 +178,10 @@ function disableAllCells() {
 }
 
 // 当游戏失败或时间到时
-function gameOver() {
-    clearInterval(timerInterval);
-    timerDisplay.textContent = "00:00.00";
-    timerDisplay.style.color = "black";
-    renderPlaceholderGrid(); // 游戏失败后重新渲染占位棋盘
+function gameOver(reason) {
+    alert(reason);  // 弹出原因，比如“哦豁～慌撒子嘛！再来一盘！”
+    gameActive = false;  // 设置游戏为非活跃状态，防止进一步点击
+    endGame();
     startButton.textContent = "重新挑战";
     startButton.style.backgroundColor = "orange";
 }
@@ -191,4 +190,12 @@ function gameOver() {
 function resetButtonState() {
     startButton.textContent = "开始挑战";
     startButton.style.backgroundColor = "#0099ff"; // 海蓝色
+}
+
+function endGame() {
+    clearInterval(timerInterval);
+    timerDisplay.textContent = "00:00.00";
+    timerDisplay.style.color = "black";
+    renderPlaceholderGrid();  // 游戏结束后重新渲染占位棋盘
+    disableAllCells();        // 禁用所有方格的点击事件
 }
