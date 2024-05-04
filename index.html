@@ -17,13 +17,11 @@
             <button id="confirmName">确认</button>
         </div> -->
         <div class="difficulty-selection">
-            <label for="difficulty">难度:</label>
-            <select id="difficulty">
-                <option value="30">简易 (30秒)</option>
-                <option value="20">中等 (20秒)</option>
-                <option value="15">困难 (15秒)</option>
-            </select>
-        </div>
+            <span>难度:</span>
+            <label><input type="radio" name="difficulty" value="30"> 简易 (30秒)</label>
+            <label><input type="radio" name="difficulty" value="20" checked> 中等 (20秒)</label>
+            <label><input type="radio" name="difficulty" value="15"> 困难 (15秒)</label>
+        </div>        
         <button id="startButton" disabled>开始挑战</button>
         <div id="timer">00:00.00</div>
         <div id="grid"></div>

@@ -106,3 +106,14 @@ button {
     cursor: pointer;
     text-align: center;
 }
+
+.difficulty-selection {
+    display: flex;
+    align-items: center;  /* 垂直居中对齐 */
+    justify-content: center;  /* 水平居中对齐 */
+    margin-bottom: 10px;  /* 添加一些底部外边距 */
+}
+
+.difficulty-selection label {
+    margin-right: 10px;  /* 每个标签之间增加间隔 */
+}

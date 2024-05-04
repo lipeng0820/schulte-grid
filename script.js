@@ -74,15 +74,15 @@ function handleClick(event) {
 }
 
 function updateTimer() {
+    if (!gameActive) return;  // 如果游戏已经结束，直接返回，防止多余的弹窗
+
     const timeElapsed = (new Date() - startTime) / 1000;
-    const timeRemaining = parseFloat(difficultySelect.value) - timeElapsed;
+    const selectedDifficulty = document.querySelector('input[name="difficulty"]:checked').value;
+    const timeRemaining = parseFloat(selectedDifficulty) - timeElapsed;
+
     if (timeRemaining <= 0) {
         clearInterval(timerInterval);
-        alert("时间到！");
-        timerDisplay.textContent = "00:00.00";
-        timerDisplay.style.color = "red";
-        alert("时间超过限制，成绩不计入纪录");
-        gameOver(); // 时间到，更改按钮状态
+        gameOver("时间到!成绩不计入纪录"); // 合并消息并调用 gameOver
     } else {
         const minutes = Math.floor(timeRemaining / 60);
         const seconds = Math.floor(timeRemaining % 60);
@@ -179,8 +179,10 @@ function disableAllCells() {
 
 // 当游戏失败或时间到时
 function gameOver(reason) {
-    alert(reason);  // 弹出原因，比如“哦豁～慌撒子嘛！再来一盘！”
-    gameActive = false;  // 设置游戏为非活跃状态，防止进一步点击
+    if (!gameActive) return;  // 防止重复调用 gameOver
+
+    alert(reason);  // 确保传入的 reason 有效
+    gameActive = false;
     endGame();
     startButton.textContent = "重新挑战";
     startButton.style.backgroundColor = "orange";
