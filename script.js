@@ -40,26 +40,25 @@ function handleClick(event) {
             endTime = new Date();
             clearInterval(timerInterval);
             timerDisplay.style.color = "red";
-            disableAllCells();  // 禁用所有方格的点击事件
+            disableAllCells();
             const totalTime = ((endTime - startTime) / 1000).toFixed(2);
-            
-            triggerConfetti();  // 立即触发散花效果
-
-            // 确保散花效果开始展示后，再显示游戏完成的弹窗
+            triggerConfetti();
             setTimeout(function() {
                 if (totalTime <= parseFloat(difficultySelect.value)) {
-                    alert(`完成游戏！用时：${totalTime}秒`);  // 显示弹窗
+                    alert(`完成游戏！用时：${totalTime}秒`);
                     updateBestRecords(playerNameInput.value, totalTime, difficultySelect.options[difficultySelect.selectedIndex].text);
                 } else {
                     alert(`时间超过限制，成绩不计入纪录`);
                 }
-            }, 100); // 延迟100ms或者更多，根据需要调整
+                resetButtonState();  // 重置按钮状态
+            }, 100);
         }
     } else {
         clearInterval(timerInterval);
         alert("哦豁～慌撒子嘛！再来一盘！");
         timerDisplay.textContent = "00:00.00";
         timerDisplay.style.color = "black";
+        gameOver(); // 游戏失败，更改按钮状态
     }
 }
 
@@ -72,6 +71,7 @@ function updateTimer() {
         timerDisplay.textContent = "00:00.00";
         timerDisplay.style.color = "red";
         alert("时间超过限制，成绩不计入纪录");
+        gameOver(); // 时间到，更改按钮状态
     } else {
         const minutes = Math.floor(timeRemaining / 60);
         const seconds = Math.floor(timeRemaining % 60);
@@ -90,9 +90,10 @@ function updateTimer() {
 // });
 
 startButton.addEventListener("click", () => {
+    resetButtonState();  // 新增代码：重置按钮状态
     generateGrid(); // 生成棋盘
     startTime = new Date();
-    timerDisplay.textContent = "00:00.00s";
+    timerDisplay.textContent = "00:00.00";
     timerDisplay.style.color = "black";
     clearInterval(timerInterval);
     timerInterval = setInterval(updateTimer, 10);
@@ -162,4 +163,16 @@ function disableAllCells() {
     cells.forEach(cell => {
         cell.removeEventListener('click', handleClick);
     });
+}
+
+// 当游戏失败或时间到时
+function gameOver() {
+    startButton.textContent = "重新挑战"; // 更改按钮文本
+    startButton.style.backgroundColor = "orangered"; // 更改按钮颜色
+}
+
+// 游戏成功后重置按钮状态
+function resetButtonState() {
+    startButton.textContent = "开始挑战";
+    startButton.style.backgroundColor = "#0099ff"; // 海蓝色
 }

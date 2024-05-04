@@ -97,3 +97,12 @@ p {
     color: #333; /* 设定字体颜色 */
 }
 
+button {
+    padding: 10px 20px;
+    background-color: #0099ff; /* 海蓝色 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
