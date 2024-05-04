@@ -2,11 +2,17 @@ const grid = document.getElementById("grid");
 const timerDisplay = document.getElementById("timer");
 const startButton = document.getElementById("startButton");
 const confirmNameButton = document.getElementById("confirmName");
-const playerNameInput = document.getElementById("playerName");
+// const playerNameInput = document.getElementById("playerName");
+// 修改为固定的玩家名称
+const playerNameInput = { value: "Player" }; // 默认名称为Player
 const difficultySelect = document.getElementById("difficulty");
 let startTime, endTime, timerInterval, currentNumber, bestRecords = [];
 
-document.addEventListener("DOMContentLoaded", loadBestRecords);
+document.addEventListener("DOMContentLoaded", function() {
+    loadBestRecords();
+    // 页面加载完毕后，不需要玩家确认名称，直接激活开始按钮
+    startButton.disabled = false;
+});
 
 function generateGrid() {
     grid.innerHTML = "";
@@ -25,33 +31,6 @@ function generateGrid() {
     currentNumber = 1;
 }
 
-// function handleClick(event) {
-//     const clickedNumber = parseInt(event.target.textContent);
-//     if (clickedNumber === currentNumber) {
-//         event.target.style.opacity = 0;
-//         currentNumber++;
-//         if (currentNumber > 25) {
-//             endTime = new Date();
-//             clearInterval(timerInterval);
-//             timerDisplay.style.color = "red";
-//             const totalTime = ((endTime - startTime) / 1000).toFixed(2);
-
-//             triggerConfetti();  // 在检测到游戏结束时立即触发散花效果
-
-//             if (totalTime <= parseFloat(difficultySelect.value)) {
-//                 alert(`完成游戏！用时：${totalTime}秒`);
-//                 updateBestRecords(playerNameInput.value, totalTime, difficultySelect.options[difficultySelect.selectedIndex].text);
-//             } else {
-//                 alert(`时间超过限制，成绩不计入纪录`);
-//             }
-//         }
-//     } else {
-//         clearInterval(timerInterval);
-//         alert("哦豁～慌撒子嘛！再来一盘！");
-//         timerDisplay.textContent = "00:00.00";
-//         timerDisplay.style.color = "black";
-//     }
-// }
 function handleClick(event) {
     const clickedNumber = parseInt(event.target.textContent);
     if (clickedNumber === currentNumber) {
@@ -101,17 +80,17 @@ function updateTimer() {
     }
 }
 
-confirmNameButton.addEventListener("click", () => {
-    if (playerNameInput.value) {
-        alert(`欢迎，${playerNameInput.value}！`);
-        startButton.disabled = false;
-    } else {
-        alert("请输入玩家姓名！");
-    }
-});
+// confirmNameButton.addEventListener("click", () => {
+//     if (playerNameInput.value) {
+//         alert(`欢迎，${playerNameInput.value}！`);
+//         startButton.disabled = false;
+//     } else {
+//         alert("请输入玩家姓名！");
+//     }
+// });
 
 startButton.addEventListener("click", () => {
-    generateGrid();  // 生成棋盘
+    generateGrid(); // 生成棋盘
     startTime = new Date();
     timerDisplay.textContent = "00:00.00s";
     timerDisplay.style.color = "black";
