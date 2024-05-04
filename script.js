@@ -9,20 +9,30 @@ const difficultySelect = document.getElementById("difficulty");
 let startTime, endTime, timerInterval, currentNumber, bestRecords = [];
 
 document.addEventListener("DOMContentLoaded", function() {
+    renderPlaceholderGrid(); // 渲染占位棋盘
     loadBestRecords();
-    // 页面加载完毕后，不需要玩家确认名称，直接激活开始按钮
-    startButton.disabled = false;
+    startButton.disabled = false; // 页面加载完毕后，激活开始按钮
 });
+
+function renderPlaceholderGrid() {
+    grid.innerHTML = "";
+    for (let i = 0; i < 25; i++) { // 创建25个灰色方格
+        const cell = document.createElement("div");
+        cell.classList.add("grid-cell", "placeholder");
+        grid.appendChild(cell);
+    }
+}
 
 function generateGrid() {
     grid.innerHTML = "";
     const numbers = Array.from({length: 25}, (_, i) => i + 1);
     for (let i = numbers.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+        [numbers[i], numbers[j]] = [numbers[j], numbers[i]];  // 洗牌算法，用于打乱数字顺序
     }
     numbers.forEach(number => {
         const cell = document.createElement("div");
+        cell.classList.remove("placeholder");  // 移除占位类，确保数字方格没有灰色背景
         cell.classList.add("grid-cell");
         cell.textContent = number;
         cell.addEventListener("click", handleClick);
@@ -51,14 +61,16 @@ function handleClick(event) {
                     alert(`时间超过限制，成绩不计入纪录`);
                 }
                 resetButtonState();  // 重置按钮状态
+                renderPlaceholderGrid(); // 游戏成功完成后重新渲染占位棋盘
             }, 100);
         }
     } else {
         clearInterval(timerInterval);
-        alert("哦豁～慌撒子嘛！再来一盘！");
         timerDisplay.textContent = "00:00.00";
         timerDisplay.style.color = "black";
+        alert("哦豁～慌撒子嘛！再来一盘！");
         gameOver(); // 游戏失败，更改按钮状态
+        renderPlaceholderGrid(); // 游戏失败后重新渲染占位棋盘
     }
 }
 
@@ -167,8 +179,12 @@ function disableAllCells() {
 
 // 当游戏失败或时间到时
 function gameOver() {
-    startButton.textContent = "重新挑战"; // 更改按钮文本
-    startButton.style.backgroundColor = "orangered"; // 更改按钮颜色
+    clearInterval(timerInterval);
+    timerDisplay.textContent = "00:00.00";
+    timerDisplay.style.color = "black";
+    renderPlaceholderGrid(); // 游戏失败后重新渲染占位棋盘
+    startButton.textContent = "重新挑战";
+    startButton.style.backgroundColor = "orange";
 }
 
 // 游戏成功后重置按钮状态
